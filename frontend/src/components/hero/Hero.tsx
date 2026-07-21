@@ -1,51 +1,117 @@
 import { motion } from "framer-motion";
-import Container from "../common/Container";
-import Button from "../common/Button";
-import FloatingBooks from "./FloatingBooks";
-import Particles from "./Particles";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-[#111315] pt-20">
-      {/* Background Glow */}
-      <div className="absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1F3A2E]/20 blur-3xl" />
-      <Particles />
-      <FloatingBooks />
-      <Container>
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 1,
-            ease: "easeOut",
-          }}
-          className="relative z-10 mx-auto max-w-4xl text-center"
+    <section className="relative flex min-h-screen items-center justify-center overflow-hidden px-6">
+
+      {/* Background glow */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1F3A2E]/30 via-[#111315] to-[#111315]" />
+
+
+      {/* Floating particles */}
+      <motion.div
+        animate={{
+          y: [0, -20, 0],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+        }}
+        className="absolute left-20 top-40 h-3 w-3 rounded-full bg-[#C9A66B]"
+      />
+
+      <motion.div
+        animate={{
+          y: [0, 20, 0],
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+        }}
+        className="absolute right-32 top-60 h-2 w-2 rounded-full bg-[#C9A66B]"
+      />
+
+
+      <div className="relative z-10 max-w-4xl text-center">
+
+
+        <motion.p
+          initial={{opacity:0}}
+          animate={{opacity:1}}
+          transition={{duration:1}}
+          className="mb-6 tracking-[0.5em] text-[#C9A66B]"
         >
-          <p className="mb-6 tracking-[0.35em] uppercase text-[#C9A66B]">
-            AI Powered Digital Library
-          </p>
+          AI POWERED DIGITAL LIBRARY
+        </motion.p>
 
-          <h1 className="text-7xl md:text-9xl font-semibold leading-[0.9] tracking-tight text-[#FAF7F2]">
-            Whispering
-            <br />
-            <span className="text-[#C9A66B]">
-              Library
-            </span>
-          </h1>
 
-          <p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-neutral-300">
-            Discover timeless classics, uncover forgotten masterpieces,
-            and converse with literature through AI.
-            Every visit is a new journey across centuries of human thought.
-          </p>
 
-          <div className="mt-12">
-            <Button>
-              Enter the Library
-            </Button>
-          </div>
-        </motion.div>
-      </Container>
+        <motion.h1
+          initial={{
+            opacity:0,
+            y:30
+          }}
+          animate={{
+            opacity:1,
+            y:0
+          }}
+          transition={{
+            duration:0.8
+          }}
+          className="text-6xl font-semibold leading-tight md:text-8xl"
+        >
+          Every Book
+          <br />
+          Whispers A Story
+        </motion.h1>
+
+
+
+        <motion.p
+          initial={{
+            opacity:0
+          }}
+          animate={{
+            opacity:1
+          }}
+          transition={{
+            delay:0.5
+          }}
+          className="mx-auto mt-8 max-w-2xl text-lg leading-8 text-neutral-300"
+        >
+          Discover timeless books, understand brilliant minds,
+          and converse with literature through artificial intelligence.
+        </motion.p>
+
+
+
+        <Link to="/shuffle">
+
+          <motion.button
+            whileHover={{
+              scale:1.05
+            }}
+            whileTap={{
+              scale:0.95
+            }}
+            className="mt-10 flex mx-auto items-center gap-3 rounded-full 
+            bg-[#C9A66B] px-8 py-4 font-semibold text-black"
+          >
+
+            Enter The Library
+
+            <ArrowRight size={20}/>
+
+          </motion.button>
+
+        </Link>
+
+
+      </div>
+
+
     </section>
   );
 }
