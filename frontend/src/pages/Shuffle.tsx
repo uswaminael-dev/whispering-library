@@ -52,6 +52,7 @@ export default function Shuffle() {
         </h1>
 
         <ShuffleCard
+          id={book.id}
           title={book.title}
           author={book.author}
           genre={book.genre}

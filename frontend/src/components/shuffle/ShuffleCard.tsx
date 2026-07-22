@@ -1,12 +1,15 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+
 interface ShuffleCardProps {
+  id: number;
   title: string;
   author: string;
   genre: string;
 }
 
 export default function ShuffleCard({
+  id,
   title,
   author,
   genre,
@@ -17,22 +20,20 @@ export default function ShuffleCard({
       animate={{ opacity: 1, scale: 1, rotateY: 0 }}
       transition={{ duration: 0.8 }}
       className="
-      mx-auto
-      w-[340px]
-      rounded-3xl
-      border
-      border-[#C9A66B]/20
-      bg-[#15211C]
-      p-8
-      text-center
-      shadow-2xl
+        mx-auto
+        w-[340px]
+        rounded-3xl
+        border
+        border-[#C9A66B]/20
+        bg-[#15211C]
+        p-8
+        text-center
+        shadow-2xl
       "
     >
-      <div className="mb-8 text-7xl">
-        📚
-      </div>
+      <div className="mb-8 text-7xl">📚</div>
 
-      <p className="uppercase tracking-[0.35em] text-[#C9A66B] text-xs">
+      <p className="text-xs uppercase tracking-[0.35em] text-[#C9A66B]">
         RANDOM DISCOVERY
       </p>
 
@@ -46,17 +47,16 @@ export default function ShuffleCard({
 
       <span className="mt-6 inline-block rounded-full bg-[#C9A66B]/10 px-4 py-2 text-[#C9A66B]">
         {genre}
-        
       </span>
 
-      <Link
-        to="/book"
-        className="mt-8 inline-block rounded-full border border-[#C9A66B] px-6 py-3 text-[#C9A66B] transition hover:bg-[#C9A66B] hover:text-black"
-      >
-        Explore This Book
-      </Link>
-
-
+      <div className="mt-8">
+        <Link
+          to={`/book/${id}`}
+          className="rounded-full bg-[#C9A66B] px-6 py-3 font-semibold text-black transition hover:opacity-90"
+        >
+          Explore this Book
+        </Link>
+      </div>
     </motion.div>
   );
 }
