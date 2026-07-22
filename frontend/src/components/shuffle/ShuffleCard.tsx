@@ -47,6 +47,25 @@ export default function ShuffleCard({
       <span className="mt-6 inline-block rounded-full bg-[#C9A66B]/10 px-4 py-2 text-[#C9A66B]">
         {genre}
       </span>
+
+      <button
+  className="
+    mt-8
+    rounded-full
+    border
+    border-[#C9A66B]
+    px-6
+    py-3
+    text-[#C9A66B]
+    transition
+    hover:bg-[#C9A66B]
+    hover:text-black
+  "
+>
+  Explore This Book
+</button>
+
+
     </motion.div>
   );
 }
