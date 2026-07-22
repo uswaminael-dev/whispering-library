@@ -87,25 +87,11 @@ export default function Hero() {
 
 
 
-        <Link to="/shuffle">
-
-          <motion.button
-            whileHover={{
-              scale:1.05
-            }}
-            whileTap={{
-              scale:0.95
-            }}
-            className="mt-10 flex mx-auto items-center gap-3 rounded-full 
-            bg-[#C9A66B] px-8 py-4 font-semibold text-black"
-          >
-
-            Enter The Library
-
-            <ArrowRight size={20}/>
-
-          </motion.button>
-
+        <Link
+          to="/shuffle"
+          className="rounded-full bg-[#C9A66B] px-8 py-4 font-semibold text-black transition hover:scale-105"
+        >
+          Enter the Library
         </Link>
 
 
