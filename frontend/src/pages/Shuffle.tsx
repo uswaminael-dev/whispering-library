@@ -1,97 +1,70 @@
-import { useState } from "react";
-import { books } from "../data/books";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getBooks } from "../services/books";
+import type { Book } from "../types/book";
 import ShuffleCard from "../components/shuffle/ShuffleCard";
-import { motion, AnimatePresence } from "framer-motion";
 
 export default function Shuffle() {
-  const [book, setBook] = useState(
-    books[Math.floor(Math.random() * books.length)]
-  );
+  const { data: books, isLoading, isError } = useQuery({
+    queryKey: ["books"],
+    queryFn: getBooks,
+  });
 
-  const [loading, setLoading] = useState(false);
+  const [book, setBook] = useState<Book | null>(null);
+
+  useEffect(() => {
+    if (books && books.length > 0 && !book) {
+      setBook(books[Math.floor(Math.random() * books.length)]);
+    }
+  }, [books, book]);
 
   function shuffleBook() {
-    setLoading(true);
+    if (!books || books.length === 0) return;
 
-    setTimeout(() => {
-      const random =
-        books[Math.floor(Math.random() * books.length)];
-
-      setBook(random);
-      setLoading(false);
-    }, 1800);
+    const random = books[Math.floor(Math.random() * books.length)];
+    setBook(random);
   }
 
-  return (
-    <main className="min-h-screen bg-[#0D0F10] text-white flex items-center justify-center">
+  if (isLoading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-[#0D0F10] text-white">
+        <h2 className="text-2xl">Loading library...</h2>
+      </main>
+    );
+  }
 
-      <div className="text-center">
+  if (isError) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-[#0D0F10] text-red-400">
+        Failed to load books.
+      </main>
+    );
+  }
+
+  if (!book) return null;
+
+  return (
+    <main className="min-h-screen bg-[#0D0F10] text-white">
+      <div className="mx-auto flex max-w-6xl flex-col items-center px-6 py-24">
 
         <h1 className="mb-12 text-5xl font-bold">
           Shuffle the Library
         </h1>
 
-        <AnimatePresence mode="wait">
-
-          {loading ? (
-
-            <motion.div
-              key="loading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-
-              <motion.div
-                animate={{
-                  rotate: 360,
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 2,
-                  ease: "linear",
-                }}
-                className="text-8xl"
-              >
-                📚
-              </motion.div>
-
-              <p className="mt-8 text-[#C9A66B] tracking-widest">
-                Searching Ancient Shelves...
-              </p>
-
-            </motion.div>
-
-          ) : (
-
-            <motion.div
-              key={book.title}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-            >
-
-              <ShuffleCard
-                title={book.title}
-                author={book.author}
-                genre={book.genre}
-              />
-
-            </motion.div>
-
-          )}
-
-        </AnimatePresence>
+        <ShuffleCard
+          title={book.title}
+          author={book.author}
+          genre={book.genre}
+        />
 
         <button
           onClick={shuffleBook}
-          className="mt-12 rounded-full bg-[#C9A66B] px-8 py-4 font-semibold text-black hover:scale-105 transition"
+          className="mt-12 rounded-full bg-[#C9A66B] px-8 py-4 font-semibold text-black transition hover:scale-105"
         >
           Shuffle Again
         </button>
 
       </div>
-
     </main>
   );
 }
