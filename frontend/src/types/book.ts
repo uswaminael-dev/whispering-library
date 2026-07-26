@@ -4,4 +4,13 @@ export interface Book {
   author: string;
   genre: string;
   summary: string;
+
+  author_bio?: string;
+  historical_context?: string;
+  themes?: string;
+
+  difficulty?: string;
+  reading_time?: string;
+
+  cover_url?: string;
 }

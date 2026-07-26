@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getBook } from "../services/books";
 
@@ -17,54 +17,151 @@ export default function BookDetails() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-[#0D0F10] text-white">
-        Loading book...
+      <main className="flex min-h-screen items-center justify-center bg-[#0D0F10] text-white">
+        <h2 className="text-2xl">Loading Book...</h2>
       </main>
     );
   }
 
   if (isError || !book) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-[#0D0F10] text-red-400">
-        Book not found.
+      <main className="flex min-h-screen items-center justify-center bg-[#0D0F10] text-red-400">
+        <h2 className="text-2xl">Book not found.</h2>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#0D0F10] text-white px-6 py-20">
-      <div className="max-w-4xl mx-auto">
+    <main className="mx-auto max-w-6xl px-6 py-20 text-white">
 
-        <Link
-          to="/shuffle"
-          className="text-[#C9A66B] hover:underline"
-        >
-          ← Back
-        </Link>
+      <div className="grid gap-12 lg:grid-cols-[300px_1fr]">
 
-        <h1 className="mt-8 text-6xl font-bold">
-          {book.title}
-        </h1>
+        {/* Book Cover */}
+        <div>
+          {book.cover_url ? (
+            <img
+              src={book.cover_url}
+              alt={book.title}
+              className="w-full rounded-3xl shadow-2xl transition duration-300 hover:scale-105"
+            />
+          ) : (
+            <div
+              className="
+                flex
+                h-[420px]
+                items-center
+                justify-center
+                rounded-3xl
+                border
+                border-[#C9A66B]/20
+                bg-gradient-to-br
+                from-[#15211C]
+                to-[#0D0F10]
+                text-8xl
+              "
+            >
+              📚
+            </div>
+          )}
+        </div>
 
-        <p className="mt-3 text-2xl text-gray-400">
-          {book.author}
-        </p>
+        {/* Book Info */}
+        <div>
 
-        <span className="inline-block mt-6 rounded-full border border-[#C9A66B] px-4 py-2">
-          {book.genre}
-        </span>
+          <p className="uppercase tracking-[0.35em] text-[#C9A66B]">
+            {book.genre}
+          </p>
 
-        <section className="mt-12">
-          <h2 className="text-3xl font-semibold">
+          <h1 className="mt-4 text-6xl font-bold leading-tight">
+            {book.title}
+          </h1>
+
+          <p className="mt-4 text-2xl text-neutral-400">
+            {book.author}
+          </p>
+
+          <div className="mt-8 flex flex-wrap gap-4">
+
+            <span className="rounded-full bg-[#C9A66B]/10 px-5 py-2 text-[#C9A66B]">
+              {book.genre}
+            </span>
+
+            <span className="rounded-full bg-[#1F3A2E] px-5 py-2">
+              {book.difficulty || "Unknown Difficulty"}
+            </span>
+
+            <span className="rounded-full bg-[#222] px-5 py-2">
+              {book.reading_time || "Unknown Reading Time"}
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* Content */}
+      <section className="mt-16 space-y-8">
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md">
+          <h2 className="mb-4 text-3xl font-semibold">
             Summary
           </h2>
 
-          <p className="mt-4 text-lg leading-8 text-gray-300">
+          <p className="leading-8 text-neutral-300">
             {book.summary}
           </p>
-        </section>
+        </div>
 
-      </div>
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md">
+          <h2 className="mb-4 text-3xl font-semibold">
+            About the Author
+          </h2>
+
+          <p className="leading-8 text-neutral-300">
+            {book.author_bio || "Information coming soon."}
+          </p>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md">
+          <h2 className="mb-4 text-3xl font-semibold">
+            Historical Context
+          </h2>
+
+          <p className="leading-8 text-neutral-300">
+            {book.historical_context || "Information coming soon."}
+          </p>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md">
+          <h2 className="mb-4 text-3xl font-semibold">
+            Main Themes
+          </h2>
+
+          <p className="leading-8 text-neutral-300">
+            {book.themes || "Information coming soon."}
+          </p>
+        </div>
+
+        <div className="flex justify-center pt-6">
+          <button
+            className="
+              rounded-full
+              bg-[#C9A66B]
+              px-8
+              py-4
+              font-semibold
+              text-black
+              transition
+              hover:scale-105
+            "
+          >
+            💬 Chat with this Book
+          </button>
+        </div>
+
+      </section>
+
     </main>
   );
 }

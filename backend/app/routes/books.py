@@ -1,41 +1,30 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
+from app.db.database import SessionLocal
+from app.models.book import Book
 
 router = APIRouter()
 
-books = [
-    {
-        "id": 1,
-        "title": "The Alchemist",
-        "author": "Paulo Coelho",
-        "genre": "Fiction",
-        "summary": "A shepherd follows his dream in search of treasure.",
-    },
-    {
-        "id": 2,
-        "title": "Beyond Good and Evil",
-        "author": "Friedrich Nietzsche",
-        "genre": "Philosophy",
-        "summary": "A critique of traditional morality and philosophy.",
-    },
-    {
-        "id": 3,
-        "title": "Pride and Prejudice",
-        "author": "Jane Austen",
-        "genre": "Classic",
-        "summary": "Love, class and family in Georgian England.",
-    },
-]
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 @router.get("/books")
-def get_books():
+def get_books(db: Session = Depends(get_db)):
+    books = db.query(Book).all()
     return books
 
-
 @router.get("/books/{book_id}")
-def get_book(book_id: int):
-    for book in books:
-        if book["id"] == book_id:
-            return book
+def get_book(book_id: int, db: Session = Depends(get_db)):
+    book = db.query(Book).filter(Book.id == book_id).first()
 
-    raise HTTPException(status_code=404, detail="Book not found")
+    if not book:
+        return {"error": "Book not found"}
+
+    return book

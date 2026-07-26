@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.routes.books import router as books_router
 
 app = FastAPI(
@@ -7,13 +8,20 @@ app = FastAPI(
     description="Backend API for Whispering Library",
 )
 
-# Register routes
-app.include_router(books_router)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+app.include_router(books_router)
 
 @app.get("/")
 def root():
     return {
         "message": "Welcome to Whispering Library API 📚"
     }
-    
