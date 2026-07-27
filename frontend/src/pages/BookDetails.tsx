@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getBook } from "../services/books";
+import { Link } from "react-router-dom";
 
 export default function BookDetails() {
   const { id } = useParams();
@@ -144,7 +145,8 @@ export default function BookDetails() {
         </div>
 
         <div className="flex justify-center pt-6">
-          <button
+          <Link
+            to={`/chat/${book.id}`}
             className="
               rounded-full
               bg-[#C9A66B]
@@ -157,7 +159,7 @@ export default function BookDetails() {
             "
           >
             💬 Chat with this Book
-          </button>
+          </Link>
         </div>
 
       </section>

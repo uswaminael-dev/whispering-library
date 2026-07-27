@@ -18,7 +18,8 @@ export default function AppRouter() {
           <Route path="/shuffle" element={<Shuffle />} />
           <Route path="/library" element={<Library />} />
           <Route path="/book/:id" element={<BookDetails />} />
-          <Route path="/chat" element={<AIChat />} />
+          <Route path="/chat/:id" element={<AIChat />} />
+
         </Route>
 
         <Route path="*" element={<NotFound />} />
