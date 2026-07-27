@@ -19,28 +19,62 @@ export default function AIChat() {
   });
 
   const [message, setMessage] = useState("");
-  const [response, setResponse] = useState("");
+  const [messages, setMessages] = useState<
+  {
+    role: "user" | "assistant";
+    content: string;
+  }[]
+>([]);
+
   const [loading, setLoading] = useState(false);
 
   async function sendMessage() {
-    if (!message.trim() || !book) return;
+  if (!message.trim()) return;
 
-    setLoading(true);
+  const userMessage = message;
 
-    try {
-      const data = await chatWithBook({
-        book_id: book.id,
-        message,
-      });
+  setMessages((prev) => [
+    ...prev,
+    {
+      role: "user",
+      content: userMessage,
+    },
+  ]);
 
-      setResponse(data.response);
-    } catch (err) {
-      console.error(err);
-      setResponse("Something went wrong.");
-    }
+  setMessage("");
+  setLoading(true);
 
-    setLoading(false);
+  try {
+    const history = messages.map((msg) => ({
+  role: msg.role,
+  content: msg.content,
+}));
+
+const data = await chatWithBook({
+  book_id: Number(id),
+  message: userMessage,
+  history,
+});
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: data.response,
+      },
+    ]);
+  } catch {
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: "Something went wrong.",
+      },
+    ]);
   }
+
+  setLoading(false);
+}
 
   if (isLoading) {
     return (
@@ -84,17 +118,51 @@ export default function AIChat() {
         {loading ? "Thinking..." : "Ask AI"}
       </button>
 
-      {response && (
-        <div className="mt-10 rounded-3xl border border-[#C9A66B]/20 bg-white/5 p-8">
-          <h2 className="mb-4 text-2xl font-semibold">
-            Gemini
-          </h2>
+      <div className="mt-10 space-y-6">
 
-          <p className="whitespace-pre-wrap leading-8">
-            {response}
-          </p>
-        </div>
-      )}
+  {messages.map((msg, index) => (
+
+
+    <div
+      key={index}
+      className={
+        msg.role === "user"
+          ? "ml-auto max-w-2xl rounded-3xl bg-[#C9A66B] p-5 text-black"
+          : "mr-auto max-w-2xl rounded-3xl bg-white/5 p-5"
+      }
+    >
+
+      <p className="mb-2 font-semibold">
+        {msg.role === "user"
+          ? "You"
+          : "Whispering Library AI"}
+      </p>
+
+      <p className="whitespace-pre-wrap leading-8">
+        {msg.content}
+      </p>
+
+    </div>
+
+  ))}
+
+  {loading && (
+
+  <div className="mr-auto max-w-md rounded-3xl bg-white/5 p-5">
+
+    <p className="font-semibold">
+      Whispering Library AI
+    </p>
+
+    <p className="mt-2 animate-pulse">
+      Thinking...
+    </p>
+
+  </div>
+
+)}
+
+</div>
 
     </main>
   );

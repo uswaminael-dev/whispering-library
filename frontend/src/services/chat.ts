@@ -2,7 +2,11 @@ import api from "./api";
 
 export interface ChatRequest {
   book_id: number;
-  message: string;
+message: string;
+history: {
+  role: string;
+  content: string;
+}[];
 }
 
 export interface ChatResponse {
