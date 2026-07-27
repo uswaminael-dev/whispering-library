@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getBook } from "../services/books";
 import { Link } from "react-router-dom";
+
+import { getBook } from "../services/books";
 
 export default function BookDetails() {
   const { id } = useParams();
@@ -97,6 +98,27 @@ export default function BookDetails() {
 
           </div>
 
+          {/* Chat Button */}
+          <div className="mt-10">
+            <Link
+              to={`/chat/${book.id}`}
+              className="
+                inline-flex
+                items-center
+                rounded-full
+                bg-[#C9A66B]
+                px-8
+                py-4
+                font-semibold
+                text-black
+                transition
+                hover:scale-105
+              "
+            >
+              💬 Chat with this Book
+            </Link>
+          </div>
+
         </div>
 
       </div>
@@ -142,24 +164,6 @@ export default function BookDetails() {
           <p className="leading-8 text-neutral-300">
             {book.themes || "Information coming soon."}
           </p>
-        </div>
-
-        <div className="flex justify-center pt-6">
-          <Link
-            to={`/chat/${book.id}`}
-            className="
-              rounded-full
-              bg-[#C9A66B]
-              px-8
-              py-4
-              font-semibold
-              text-black
-              transition
-              hover:scale-105
-            "
-          >
-            💬 Chat with this Book
-          </Link>
         </div>
 
       </section>

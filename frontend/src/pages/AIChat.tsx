@@ -1,60 +1,100 @@
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+
+import { getBook } from "../services/books";
+import { chatWithBook } from "../services/chat";
+
 export default function AIChat() {
+  const { id } = useParams();
+
+  const {
+    data: book,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["book", id],
+    queryFn: () => getBook(Number(id)),
+    enabled: !!id,
+  });
+
+  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function sendMessage() {
+    if (!message.trim() || !book) return;
+
+    setLoading(true);
+
+    try {
+      const data = await chatWithBook({
+        book_id: book.id,
+        message,
+      });
+
+      setResponse(data.response);
+    } catch (err) {
+      console.error(err);
+      setResponse("Something went wrong.");
+    }
+
+    setLoading(false);
+  }
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center text-white">
+        Loading...
+      </main>
+    );
+  }
+
+  if (isError || !book) {
+    return (
+      <main className="flex min-h-screen items-center justify-center text-white">
+        Book not found.
+      </main>
+    );
+  }
+
   return (
-    <main className="mx-auto flex min-h-screen max-w-5xl flex-col px-6 py-10 text-white">
+    <main className="mx-auto max-w-5xl px-6 py-20 text-white">
 
       <h1 className="text-5xl font-bold">
-        Chat with your Book
+        Chat with "{book.title}"
       </h1>
 
-      <p className="mt-4 text-neutral-400">
-        Ask anything about the book.
+      <p className="mt-3 text-neutral-400">
+        Ask anything about this book.
       </p>
 
-      <div className="mt-10 flex-1 rounded-3xl border border-white/10 bg-white/5 p-8">
+      <textarea
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Ask a question..."
+        className="mt-8 h-40 w-full rounded-2xl bg-white/5 p-5 outline-none"
+      />
 
-        <div className="space-y-6">
+      <button
+        onClick={sendMessage}
+        disabled={loading}
+        className="mt-6 rounded-full bg-[#C9A66B] px-8 py-3 font-semibold text-black"
+      >
+        {loading ? "Thinking..." : "Ask AI"}
+      </button>
 
-          <div className="max-w-md rounded-2xl bg-[#1F3A2E] p-4">
-            What is the main theme?
-          </div>
+      {response && (
+        <div className="mt-10 rounded-3xl border border-[#C9A66B]/20 bg-white/5 p-8">
+          <h2 className="mb-4 text-2xl font-semibold">
+            Gemini
+          </h2>
 
-          <div className="ml-auto max-w-md rounded-2xl bg-[#C9A66B] p-4 text-black">
-            The central theme is following one's Personal Legend...
-          </div>
-
+          <p className="whitespace-pre-wrap leading-8">
+            {response}
+          </p>
         </div>
-
-      </div>
-
-      <div className="mt-8 flex gap-4">
-
-        <input
-          className="
-            flex-1
-            rounded-full
-            border
-            border-white/10
-            bg-white/5
-            px-6
-            py-4
-            outline-none
-          "
-          placeholder="Ask anything..."
-        />
-
-        <button
-          className="
-            rounded-full
-            bg-[#C9A66B]
-            px-8
-            font-semibold
-            text-black
-          "
-        >
-          Send
-        </button>
-
-      </div>
+      )}
 
     </main>
   );
